@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: paneladecasadb
+      POSTGRES_PASSWORD: paneladecasapass
+      POSTGRES_DB: paneladecasa
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://paneladecasadb:paneladecasapass@postgres:5432/paneladecasa
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+volumes:
+  pgdata:

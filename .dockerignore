@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.next
+.env
+.env.local
+dist
+build
+.git
+.gitignore
+README.md
+docs
+.github
+.vscode
+*.log

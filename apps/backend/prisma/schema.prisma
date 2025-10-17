@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  chef         Chef?
+  customer     Customer?
+}
+
+model Chef {
+  id           String         @id @default(uuid())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       String         @unique
+  kitchenName  String
+  bio          String?
+  cuisineTypes String[]
+  location     String?
+  openingHours Json?
+  approved     Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  dishes       Dish[]
+  categories   MenuCategory[]
+  orders       Order[]
+  ratings      Rating[]       @relation("ChefRatings")
+}
+
+model Customer {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id])
+  userId          String   @unique
+  defaultAddress  String?
+  createdAt       DateTime @default(now())
+  orders          Order[]
+  ratings         Rating[] @relation("UserRatings")
+}
+
+model Dish {
+  id          String   @id @default(uuid())
+  chef        Chef     @relation(fields: [chefId], references: [id])
+  chefId      String
+  type        DishType
+  name        String
+  description String?
+  ingredients String[]
+  price       Decimal  @db.Decimal(10,2)
+  photoUrl    String?
+  prepMinutes Int?
+  createdAt   DateTime @default(now())
+  orderItems  OrderItem[]
+}
+
+model MenuCategory {
+  id         String      @id @default(uuid())
+  chef       Chef        @relation(fields: [chefId], references: [id])
+  chefId     String
+  name       String
+  minSelect  Int         @default(0)
+  maxSelect  Int         @default(1)
+  items      MenuItem[]
+}
+
+model MenuItem {
+  id          String       @id @default(uuid())
+  category    MenuCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String
+  price       Decimal      @db.Decimal(10,2)
+}
+
+model Order {
+  id             String      @id @default(uuid())
+  customer       Customer    @relation(fields: [customerId], references: [id])
+  customerId     String
+  chef           Chef        @relation(fields: [chefId], references: [id])
+  chefId         String
+  status         OrderStatus @default(NEW)
+  subtotal       Decimal     @db.Decimal(10,2)
+  deliveryFee    Decimal     @db.Decimal(10,2)
+  total          Decimal     @db.Decimal(10,2)
+  deliveryAddress String
+  paymentMethod  PaymentMethod @default(MOCK)
+  createdAt      DateTime    @default(now())
+  items          OrderItem[]
+}
+
+model OrderItem {
+  id             String   @id @default(uuid())
+  order          Order    @relation(fields: [orderId], references: [id])
+  orderId        String
+  dish           Dish     @relation(fields: [dishId], references: [id])
+  dishId         String
+  quantity       Int      @default(1)
+  unitPrice      Decimal  @db.Decimal(10,2)
+  customizations Json?
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  customer   Customer @relation("UserRatings", fields: [customerId], references: [id])
+  customerId String
+  chef       Chef     @relation("ChefRatings", fields: [chefId], references: [id])
+  chefId     String
+  stars      Int
+  comment    String?
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  CUSTOMER
+  CHEF
+  ADMIN
+}
+
+enum DishType {
+  READY
+  ALACARTE
+}
+
+enum OrderStatus {
+  NEW
+  PREPARING
+  READY
+  DELIVERING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  MOCK
+  STRIPE
+  PAGSEGURO
+}
