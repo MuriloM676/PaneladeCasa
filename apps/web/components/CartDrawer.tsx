@@ -41,6 +41,9 @@ export function CartDrawer({ items, onRemove, onCheckout }: CartDrawerProps) {
           <div className="border-t pt-2 mb-4">
             <p className="text-xl font-bold">Total: R$ {Number(total).toFixed(2)}</p>
           </div>
+          <a href="/customer/checkout" className="w-full block bg-orange-600 text-white py-2 rounded hover:bg-orange-700 text-center mb-2">
+            Ir para Checkout
+          </a>
           <button onClick={onCheckout} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
             Finalizar Pedido
           </button>
