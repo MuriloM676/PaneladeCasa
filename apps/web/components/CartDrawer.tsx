@@ -29,7 +29,7 @@ export function CartDrawer({ items, onRemove, onCheckout }: CartDrawerProps) {
                 <div className="flex-1">
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-sm text-gray-600">
-                    {item.quantity}x R$ {item.price.toFixed(2)}
+                    {item.quantity}x R$ {Number(item.price).toFixed(2)}
                   </p>
                 </div>
                 <button onClick={() => onRemove(item.id)} className="text-red-600 hover:text-red-800">
@@ -39,7 +39,7 @@ export function CartDrawer({ items, onRemove, onCheckout }: CartDrawerProps) {
             ))}
           </div>
           <div className="border-t pt-2 mb-4">
-            <p className="text-xl font-bold">Total: R$ {total.toFixed(2)}</p>
+            <p className="text-xl font-bold">Total: R$ {Number(total).toFixed(2)}</p>
           </div>
           <button onClick={onCheckout} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
             Finalizar Pedido

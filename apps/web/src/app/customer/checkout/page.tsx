@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -11,14 +11,16 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const total = items.reduce((sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity, 0);
+  const total = useMemo(() => items.reduce((sum: number, item: { price: number; quantity: number }) => sum + Number(item.price) * item.quantity, 0), [items]);
+  const chefId = useMemo(() => (items.length ? items[0].chefId : ''), [items]);
 
   const handleCheckout = async () => {
     setLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/orders', {
+      // Use proxy rewrite of Next.js
+      const res = await fetch('/api/orders/quick-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,6 +28,10 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           items: items.map((i: { dishId: string; quantity: number }) => ({ dishId: i.dishId, quantity: i.quantity })),
+          chefId,
+          deliveryAddress: 'Endereço de teste',
+          deliveryFee: 0,
+          paymentMethod: 'MOCK',
         }),
       });
       if (!res.ok) {
@@ -57,11 +63,11 @@ export default function CheckoutPage() {
         {items.map((item: { dishId: string; name: string; price: number; quantity: number }) => (
           <li key={item.dishId} className="flex justify-between items-center py-2 border-b">
             <span>{item.quantity}x {item.name}</span>
-            <span>R$ {(item.price * item.quantity).toFixed(2)}</span>
+            <span>R$ {Number(item.price * item.quantity).toFixed(2)}</span>
           </li>
         ))}
       </ul>
-      <div className="font-bold text-lg mb-4">Total: R$ {total.toFixed(2)}</div>
+  <div className="font-bold text-lg mb-4">Total: R$ {Number(total).toFixed(2)}</div>
       {error && <div className="text-red-500 mb-4">{error}</div>}
       {success ? (
         <div className="text-green-600 font-bold mb-4">Pedido realizado com sucesso! Redirecionando...</div>

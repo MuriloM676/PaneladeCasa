@@ -32,7 +32,7 @@ const imageFileFilter = (req: any, file: any, callback: any) => {
   callback(null, true);
 };
 
-@Controller('api/upload')
+@Controller('upload')
 export class UploadController {
   @Post('image')
   @UseGuards(JwtAuthGuard)

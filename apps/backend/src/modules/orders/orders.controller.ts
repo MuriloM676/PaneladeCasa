@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateOrderDto, CalculatePlateDto } from './dto/order.dto';
+import { CreateOrderDto, CalculatePlateDto, QuickCheckoutDto } from './dto/order.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
 
 @Controller('orders')
 export class OrdersController {
@@ -19,6 +20,12 @@ export class OrdersController {
     return this.orders.calculatePlate(dto);
   }
 
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  list(@CurrentUser() user: { userId: string; role: 'CUSTOMER' | 'CHEF' | 'ADMIN' }) {
+    return this.orders.listForUser(user);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   get(@Param('id') id: string) {
@@ -29,5 +36,14 @@ export class OrdersController {
   @UseGuards(JwtAuthGuard)
   async updateStatus(@Param('id') id: string, @Body() body: { status: 'NEW' | 'PREPARING' | 'READY' | 'DELIVERING' | 'COMPLETED' | 'CANCELLED' }) {
     return this.prisma.order.update({ where: { id }, data: { status: body.status } });
+  }
+
+  @Post('quick-checkout')
+  @UseGuards(JwtAuthGuard)
+  quickCheckout(
+    @CurrentUser() user: { userId: string; role: 'CUSTOMER' | 'CHEF' | 'ADMIN' },
+    @Body() dto: QuickCheckoutDto,
+  ) {
+    return this.orders.quickCheckout(user, dto);
   }
 }

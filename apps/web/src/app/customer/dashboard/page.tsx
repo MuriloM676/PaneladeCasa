@@ -39,7 +39,7 @@ export default function CustomerDashboardPage() {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:4000/api/orders', {
+      const response = await fetch('/api/orders', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +48,7 @@ export default function CustomerDashboardPage() {
       if (response.ok) {
         const data = await response.json();
         setOrders(data);
-        setActiveOrders(data.filter((o: Order) => o.status !== 'COMPLETED' && o.status !== 'CANCELLED'));
+  setActiveOrders(data.filter((o: Order) => o.status !== 'COMPLETED' && o.status !== 'CANCELLED'));
         setCompletedOrders(data.filter((o: Order) => o.status === 'COMPLETED'));
       }
     } catch (err) {
@@ -60,7 +60,7 @@ export default function CustomerDashboardPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PENDING':
+      case 'NEW':
         return 'bg-yellow-100 text-yellow-800';
       case 'PREPARING':
         return 'bg-blue-100 text-blue-800';
@@ -79,7 +79,7 @@ export default function CustomerDashboardPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'PENDING':
+      case 'NEW':
         return 'Pendente';
       case 'PREPARING':
         return 'Preparando';
@@ -224,7 +224,7 @@ export default function CustomerDashboardPage() {
 
                   <div className="mt-4 flex justify-between items-center">
                     <span className="text-lg font-bold text-gray-900">
-                      R$ {Number(order.totalPrice).toFixed(2)}
+                          R$ {Number((order as any).total).toFixed(2)}
                     </span>
                     <Link
                       href={`/orders/${order.id}`}
@@ -296,7 +296,7 @@ export default function CustomerDashboardPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        R$ {Number(order.totalPrice).toFixed(2)}
+                        R$ {Number((order as any).total).toFixed(2)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link

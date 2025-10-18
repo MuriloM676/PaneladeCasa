@@ -46,3 +46,23 @@ export class CalculatePlateDto {
   @IsString({ each: true })
   menuItemIds!: string[];
 }
+
+export class QuickCheckoutDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OrderItemDto)
+  items!: OrderItemDto[];
+
+  @IsString()
+  chefId!: string;
+
+  @IsString()
+  deliveryAddress!: string;
+
+  @IsNumber()
+  @Min(0)
+  deliveryFee!: number;
+
+  @IsString()
+  paymentMethod!: 'MOCK' | 'STRIPE' | 'PAGSEGURO';
+}

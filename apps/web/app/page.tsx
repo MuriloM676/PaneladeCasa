@@ -19,18 +19,21 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/chefs')
       .then((r) => r.json())
-      .then((data) =>
+      .then((payload) => {
+        const list = Array.isArray(payload) ? payload : Array.isArray(payload?.data) ? payload.data : [];
         setChefs(
-          data.map((c: any) => ({
+          list.map((c: any) => ({
             id: c.id,
             kitchenName: c.kitchenName,
             bio: c.bio,
-            cuisineTypes: c.cuisineTypes,
+            cuisineTypes: c.cuisineTypes ?? [],
             location: c.location,
           }))
-        )
-      )
-      .catch(() => {});
+        );
+      })
+      .catch((err) => {
+        console.error('Falha ao carregar chefs', err);
+      });
   }, []);
 
   return (

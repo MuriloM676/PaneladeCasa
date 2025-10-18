@@ -26,7 +26,7 @@ interface Order {
   id: string;
   createdAt: string;
   status: string;
-  totalPrice: number;
+  total: number;
   customer: {
     user: {
       email: string;
@@ -60,14 +60,14 @@ export default function ChefDashboardPage() {
       const token = localStorage.getItem('token');
 
       // Buscar pratos do chef
-      const dishesRes = await fetch('http://localhost:4000/api/dishes', {
+      const dishesRes = await fetch('/api/dishes', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const dishesData = await dishesRes.json();
       setDishes(dishesData.slice(0, 6)); // Primeiros 6 pratos
 
       // Buscar pedidos (simular estatísticas)
-      const ordersRes = await fetch(`http://localhost:4000/api/orders`, {
+      const ordersRes = await fetch(`/api/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (ordersRes.ok) {
@@ -75,11 +75,11 @@ export default function ChefDashboardPage() {
         setRecentOrders(ordersData.slice(0, 5));
         
         // Calcular estatísticas
-        const pending = ordersData.filter((o: Order) => o.status === 'PENDING').length;
+        const pending = ordersData.filter((o: Order) => o.status === 'NEW' || o.status === 'PREPARING' || o.status === 'READY' || o.status === 'DELIVERING').length;
         const completed = ordersData.filter((o: Order) => o.status === 'COMPLETED').length;
         const revenue = ordersData
           .filter((o: Order) => o.status === 'COMPLETED')
-          .reduce((sum: number, o: Order) => sum + Number(o.totalPrice), 0);
+          .reduce((sum: number, o: any) => sum + Number((o as any).total ?? (o as any).totalPrice ?? 0), 0);
 
         setStats({
           totalOrders: ordersData.length,
@@ -176,7 +176,7 @@ export default function ChefDashboardPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Receita Total</p>
-                <p className="text-2xl font-semibold text-gray-900">R$ {stats.totalRevenue.toFixed(2)}</p>
+                <p className="text-2xl font-semibold text-gray-900">R$ {Number(stats.totalRevenue).toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -190,7 +190,7 @@ export default function ChefDashboardPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Avaliação Média</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.averageRating.toFixed(1)} ⭐</p>
+                <p className="text-2xl font-semibold text-gray-900">{Number(stats.averageRating).toFixed(1)} ⭐</p>
               </div>
             </div>
           </div>
@@ -271,7 +271,7 @@ export default function ChefDashboardPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-medium text-gray-900">
-                          R$ {Number(order.totalPrice).toFixed(2)}
+                          R$ {Number((order as any).total ?? (order as any).totalPrice ?? 0).toFixed(2)}
                         </p>
                         <span className={`inline-flex text-xs px-2 py-1 rounded-full ${
                           order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :

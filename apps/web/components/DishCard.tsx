@@ -3,7 +3,7 @@
 interface DishCardProps {
   name: string;
   description?: string;
-  price: number;
+  price: number | string;
   photoUrl?: string;
   prepMinutes?: number;
   ingredients?: string[];
@@ -21,7 +21,7 @@ export function DishCard({ name, description, price, photoUrl, prepMinutes, ingr
           <p className="text-xs text-gray-500">Ingredientes: {ingredients.join(', ')}</p>
         )}
         <div className="flex justify-between items-center">
-          <span className="text-xl font-semibold text-green-600">R$ {price.toFixed(2)}</span>
+          <span className="text-xl font-semibold text-green-600">R$ {Number(price).toFixed(2)}</span>
           {prepMinutes && <span className="text-xs text-gray-500">{prepMinutes} min</span>}
         </div>
         {onAddToCart && (

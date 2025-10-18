@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { DishCard } from '../../../components/DishCard';
+import { useCart } from '../../../src/app/context/CartContext';
 import { CustomPlateBuilder } from '../../../components/CustomPlateBuilder';
 
 interface Chef {
@@ -28,6 +29,7 @@ interface MenuCategory {
 }
 
 export default function ChefPage({ params }: { params: { id: string } }) {
+  const { addItem } = useCart();
   const [chef, setChef] = useState<Chef | null>(null);
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [categories, setCategories] = useState<MenuCategory[]>([]);
@@ -74,7 +76,20 @@ export default function ChefPage({ params }: { params: { id: string } }) {
           <h2 className="text-2xl font-bold mb-4">Pratos Prontos</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {dishes.map((dish) => (
-              <DishCard key={dish.id} {...dish} onAddToCart={() => alert('Adicionar ao carrinho (mock)')} />
+              <DishCard
+                key={dish.id}
+                {...dish}
+                onAddToCart={() =>
+                  addItem({
+                    dishId: dish.id,
+                    name: dish.name,
+                    price: Number(dish.price),
+                    imageUrl: dish.photoUrl,
+                    quantity: 1,
+                    chefId: params.id,
+                  })
+                }
+              />
             ))}
           </div>
         </div>
