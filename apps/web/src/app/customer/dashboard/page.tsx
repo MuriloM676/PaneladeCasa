@@ -8,7 +8,8 @@ interface Order {
   id: string;
   createdAt: string;
   status: string;
-  totalPrice: number;
+  total?: number;
+  totalPrice?: number;
   chef: {
     kitchenName: string;
     user: {
@@ -224,7 +225,7 @@ export default function CustomerDashboardPage() {
 
                   <div className="mt-4 flex justify-between items-center">
                     <span className="text-lg font-bold text-gray-900">
-                          R$ {Number((order as any).total).toFixed(2)}
+                          R$ {Number(order.total ?? order.totalPrice ?? 0).toFixed(2)}
                     </span>
                     <Link
                       href={`/orders/${order.id}`}
@@ -296,7 +297,7 @@ export default function CustomerDashboardPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        R$ {Number((order as any).total).toFixed(2)}
+                        R$ {Number(order.total ?? order.totalPrice ?? 0).toFixed(2)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link

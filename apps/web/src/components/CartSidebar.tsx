@@ -32,8 +32,10 @@ export default function CartSidebar() {
         ))}
       </ul>
       <div className="mt-4">
-  <div className="font-bold text-lg">Total: R$ {Number(total).toFixed(2)}</div>
-        <button className="w-full bg-green-600 text-white py-2 rounded mt-2">Finalizar Pedido</button>
+        <div className="font-bold text-lg">Total: R$ {Number(total).toFixed(2)}</div>
+        <a href="/customer/checkout" className="block w-full bg-orange-600 text-white py-2 rounded mt-2 text-center hover:bg-orange-700">
+          Ir para Checkout
+        </a>
         <button onClick={clearCart} className="w-full text-gray-500 py-2 mt-1">Limpar Carrinho</button>
       </div>
     </aside>
