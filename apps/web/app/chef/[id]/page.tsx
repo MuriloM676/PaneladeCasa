@@ -34,25 +34,25 @@ export default function ChefPage({ params }: { params: { id: string } }) {
   const [plateTotal, setPlateTotal] = useState<number | undefined>();
 
   useEffect(() => {
-    // Simulação de fetch - integrar com API real
-    fetch(`http://localhost:3002/api/chefs/${params.id}`)
+    // Busca dados reais via API (proxy via Next.js rewrites)
+    fetch(`/api/chefs/${params.id}`)
       .then((r) => r.json())
       .then((data) => setChef(data))
       .catch(() => {});
 
-    fetch(`http://localhost:3002/api/dishes?chefId=${params.id}`)
+  fetch(`/api/dishes?chefId=${params.id}`)
       .then((r) => r.json())
       .then((data) => setDishes(data))
       .catch(() => {});
 
-    fetch(`http://localhost:3002/api/menu/categories/${params.id}`)
+  fetch(`/api/menu/categories/${params.id}`)
       .then((r) => r.json())
       .then((data) => setCategories(data))
       .catch(() => {});
   }, [params.id]);
 
   const handleCalculate = async (itemIds: string[]) => {
-    const res = await fetch('http://localhost:3002/api/orders/calculate-plate', {
+    const res = await fetch('/api/orders/calculate-plate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ menuItemIds: itemIds }),

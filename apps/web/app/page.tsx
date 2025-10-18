@@ -17,7 +17,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('http://localhost:3002/api/chefs')
+    fetch('/api/chefs')
       .then((r) => r.json())
       .then((data) =>
         setChefs(

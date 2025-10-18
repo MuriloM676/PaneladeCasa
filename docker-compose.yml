@@ -10,6 +10,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paneladecasadb -d paneladecasa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   backend:
     build:
       context: .
@@ -18,10 +23,15 @@ services:
       NODE_ENV: production
       PORT: 4000
       DATABASE_URL: postgres://paneladecasadb:paneladecasapass@postgres:5432/paneladecasa
+      JWT_SECRET: sua_senha_secreta_super_segura_aqui
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "4000:4000"
+    volumes:
+      - uploads:/app/apps/backend/uploads
+    restart: on-failure
   frontend:
     build:
       context: .
@@ -36,3 +46,4 @@ services:
       - "3000:3000"
 volumes:
   pgdata:
+  uploads:

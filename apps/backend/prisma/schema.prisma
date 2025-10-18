@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -25,6 +26,8 @@ model Chef {
   bio          String?
   cuisineTypes String[]
   location     String?
+  avatarUrl    String?
+  coverUrl     String?
   openingHours Json?
   approved     Boolean        @default(false)
   createdAt    DateTime       @default(now())

@@ -10,6 +10,7 @@ import { DishesModule } from './dishes/dishes.module';
 import { MenuModule } from './menu/menu.module';
 import { OrdersModule } from './orders/orders.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RatingsModule } from './ratings/ratings.module';
     MenuModule,
     OrdersModule,
     RatingsModule,
+    UploadModule,
   ],
   controllers: [],
 })

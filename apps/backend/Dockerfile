@@ -1,5 +1,9 @@
 # Backend Dockerfile
 FROM node:20-alpine
+
+# Instalar OpenSSL para Prisma
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 # Copia package.json e lockfiles do root, backend e shared
 COPY package.json ./
@@ -15,10 +19,15 @@ RUN npm install --legacy-peer-deps
 WORKDIR /app
 COPY apps/backend ./apps/backend
 COPY packages/shared ./packages/shared
+# Copia script de inicialização
+COPY apps/backend/docker-entrypoint.sh /app/apps/backend/
+RUN chmod +x /app/apps/backend/docker-entrypoint.sh
 # Build do backend
 WORKDIR /app/apps/backend
 RUN npm run build
+# Criar pasta uploads
+RUN mkdir -p /app/apps/backend/uploads
 ENV NODE_ENV=production
 ENV PORT=4000
 EXPOSE 4000
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["/app/apps/backend/docker-entrypoint.sh"]

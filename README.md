@@ -1,10 +1,21 @@
 # Panela de Casa — Marketplace (MVP)
 
-Monorepo full-stack com backend (NestJS + PostgreSQL/Prisma + JWT) e frontend (Next.js + Tailwind) para conectar Chefs caseiros a Clientes. MVP com autenticação, gestão de cardápio (pratos prontos e montagem), pedidos e avaliações.
+Monorepo full-stack com backend (NestJS + PostgreSQL/Prisma + JWT) e frontend (Next.js + Tailwind) para conectar Chefs caseiros a Clientes. MVP com autenticação, gestão de cardápio (pratos prontos e montagem), pedidos, avaliações e **upload de imagens**.
+
+## ✨ Funcionalidades Implementadas
+
+- ✅ **Autenticação JWT** (Login, Registro, Proteção de rotas)
+- ✅ **Gestão de Chefs** (Perfil, avaliações, localização)
+- ✅ **Cardápio** (Pratos prontos + Menu customizável)
+- ✅ **Pedidos** (Criação, acompanhamento, histórico)
+- ✅ **Avaliações** (Rating de chefs)
+- ✅ **Paginação e Filtros** (Listagens otimizadas)
+- ✅ **Upload de Imagens** (Fotos de pratos, avatares) 📸 **NOVO!**
+- ✅ **Docker** (Ambiente completo em 1 comando)
 
 ## Estrutura de Pastas
 
-- `apps/backend`: API NestJS com Prisma + JWT (porta 3001/3002)
+- `apps/backend`: API NestJS com Prisma + JWT + Multer (porta 4000)
 - `apps/web`: Frontend Next.js 14 + App Router + Tailwind (porta 3000)
 - `packages/shared`: Tipos TypeScript compartilhados
 - `docs/`: ERD, API e especificações de componentes
@@ -13,43 +24,87 @@ Monorepo full-stack com backend (NestJS + PostgreSQL/Prisma + JWT) e frontend (N
 
 ## Como Rodar com Docker
 
-### 1) Pré-requisitos
-- Docker
-- Docker Compose
+### 🚀 Comando Único (Recomendado)
 
-### 2) Subir todos os serviços
-Na raiz do projeto, execute:
+**Primeira vez ou após resetar o banco:**
 ```powershell
 docker-compose up --build
 ```
 
-### 3) Serviços disponíveis
+✨ **Isso vai automaticamente:**
+- ✅ Subir PostgreSQL e aguardar estar pronto
+- ✅ Gerar Prisma Client para Linux
+- ✅ Aplicar todas as migrações
+- ✅ Popular banco com dados de teste (seed)
+- ✅ Iniciar backend e frontend
+
+**Próximas vezes (sem rebuild):**
+```powershell
+docker-compose up
+```
+
+### 📊 Dados de Teste Incluídos
+
+Ao subir pela primeira vez, o banco será populado com:
+- **3 chefs**: maria@chef.com, joao@chef.com, ana@chef.com
+- **2 clientes**: carlos@cliente.com, lucia@cliente.com
+- **5 pratos prontos**
+- **Categorias e itens** de menu para montagem
+- **2 pedidos** de exemplo
+- **3 avaliações**
+
+**🔑 Senha padrão para todos:** `123456`
+
+### 🌐 Serviços Disponíveis
+
+Após subir os containers:
 - **Frontend**: [http://localhost:3000](http://localhost:3000)
 - **Backend/API**: [http://localhost:4000](http://localhost:4000)
-- **Banco de dados PostgreSQL**: `localhost:5432` (usuário: paneladecasadb, senha: paneladecasapass, banco: paneladecasa)
+- **PostgreSQL**: `localhost:5432` (user: paneladecasadb, pass: paneladecasapass)
 
-### 4) Criar e aplicar migrações do Prisma (primeira vez)
+### 🛠️ Comandos Úteis
 
-**Criar migração inicial:**
-```powershell
-docker-compose exec backend npx prisma migrate dev --name init
-```
-
-**Ou aplicar migrações existentes (produção):**
-```powershell
-docker-compose exec backend npx prisma migrate deploy
-```
-
-### 5) Parar os serviços
+**Parar os serviços:**
 ```powershell
 docker-compose down
 ```
 
-### 6) Resetar banco de dados (se necessário)
+**Resetar banco de dados (apaga tudo):**
 ```powershell
 docker-compose down -v
 docker-compose up --build
 ```
+
+**Ver logs do backend:**
+```powershell
+docker-compose logs -f backend
+```
+
+**Acessar shell do container backend:**
+```powershell
+docker-compose exec backend sh
+```
+
+**Rodar seed manualmente (se necessário):**
+```powershell
+docker-compose exec backend npm run prisma:seed
+```
+
+### ⚠️ Troubleshooting
+
+**Erro: "Prisma Client could not locate the Query Engine"**
+- Solução: O `binaryTargets` já está configurado. Apenas rode `docker-compose up --build`
+
+**Erro: "port 5432 already allocated"**
+- Solução: Você tem um PostgreSQL rodando localmente. Pare-o ou mude a porta no docker-compose.yml
+
+**Backend não inicia ou fica reiniciando:**
+- Verifique logs: `docker-compose logs -f backend`
+- Aguarde o PostgreSQL estar pronto (healthcheck automático já configurado)
+
+**Seed não populou o banco:**
+- Rode manualmente: `docker-compose exec backend npm run prisma:seed`
+- Se já rodou antes, o seed pode falhar (é esperado)
 
 ---
 
