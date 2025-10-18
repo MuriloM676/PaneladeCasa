@@ -29,11 +29,7 @@ export class ChefsController {
     });
   }
 
-  @Get(':id')
-  get(@Param('id') id: string) {
-    return this.chefs.findById(id);
-  }
-
+  // Rotas específicas ANTES de rotas com parâmetros dinâmicos
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('CHEF')
   @Get('profile/me')
@@ -60,5 +56,11 @@ export class ChefsController {
   @Put('orders/:id/status')
   updateOrderStatus(@Param('id') orderId: string, @Body() data: { status: string }) {
     return this.chefs.updateOrderStatus(orderId, data.status);
+  }
+
+  // Rota com parâmetro dinâmico por ÚLTIMO
+  @Get(':id')
+  get(@Param('id') id: string) {
+    return this.chefs.findById(id);
   }
 }
