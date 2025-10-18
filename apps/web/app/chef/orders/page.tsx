@@ -47,10 +47,22 @@ export default function ChefOrdersPage() {
       const res = await fetch('/api/chefs/orders', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Erro ao buscar pedidos');
+      
+      // Verificar se a resposta tem conteúdo antes de tentar fazer parse
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Resposta do servidor não é JSON válido');
+      }
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ message: 'Erro ao buscar pedidos' }));
+        throw new Error(errorData.message || 'Erro ao buscar pedidos');
+      }
+      
       const data = await res.json();
-      setOrders(data);
+      setOrders(Array.isArray(data) ? data : []);
     } catch (err: any) {
+      console.error('Erro ao buscar pedidos:', err);
       setError(err.message || 'Erro ao buscar pedidos');
     } finally {
       setLoading(false);
