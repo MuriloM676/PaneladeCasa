@@ -15,6 +15,9 @@ COPY apps/web ./apps/web
 COPY packages/shared ./packages/shared
 # Build do frontend
 WORKDIR /app/apps/web
+# Ensure Next.js sees API URL during build (used in next.config.js rewrites)
+ARG NEXT_PUBLIC_API_URL=http://backend:4000
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 RUN npm run build
 ENV NODE_ENV=production
 ENV PORT=3000
