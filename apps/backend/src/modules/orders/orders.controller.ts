@@ -32,6 +32,12 @@ export class OrdersController {
     return this.prisma.order.findUnique({ where: { id }, include: { items: true } });
   }
 
+  @Get(':id/status')
+  @UseGuards(JwtAuthGuard)
+  getStatus(@Param('id') id: string) {
+    return this.orders.getOrderStatus(id);
+  }
+
   @Patch(':id/status')
   @UseGuards(JwtAuthGuard)
   async updateStatus(@Param('id') id: string, @Body() body: { status: 'NEW' | 'PREPARING' | 'READY' | 'DELIVERING' | 'COMPLETED' | 'CANCELLED' }) {

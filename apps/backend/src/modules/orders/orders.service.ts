@@ -106,4 +106,34 @@ export class OrdersService {
       },
     });
   }
+
+  async getOrderStatus(orderId: string) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        total: true,
+        chef: {
+          select: {
+            kitchenName: true,
+          },
+        },
+        customer: {
+          select: {
+            user: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!order) throw new BadRequestException('Pedido não encontrado');
+    return order;
+  }
 }
+

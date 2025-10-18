@@ -66,4 +66,82 @@ export class ChefsService {
       },
     });
   }
+
+  async findByUserId(userId: string) {
+    return this.prisma.chef.findUnique({
+      where: { userId },
+      include: {
+        user: { select: { email: true } },
+        _count: { select: { ratings: true, orders: true, dishes: true } },
+      },
+    });
+  }
+
+  async updateProfile(userId: string, data: {
+    kitchenName?: string;
+    bio?: string;
+    location?: string;
+    openingHours?: any;
+    cuisineTypes?: string[];
+    deliveryRadius?: number;
+    photoUrl?: string;
+    avatarUrl?: string;
+    coverUrl?: string;
+  }) {
+    const chef = await this.prisma.chef.findUnique({ where: { userId } });
+    if (!chef) {
+      throw new Error('Chef not found');
+    }
+
+    return this.prisma.chef.update({
+      where: { id: chef.id },
+      data: {
+        kitchenName: data.kitchenName,
+        bio: data.bio,
+        location: data.location,
+        openingHours: data.openingHours,
+        cuisineTypes: data.cuisineTypes,
+      },
+      include: {
+        user: { select: { email: true } },
+      },
+    });
+  }
+
+  async getChefOrders(userId: string) {
+    const chef = await this.prisma.chef.findUnique({ where: { userId } });
+    if (!chef) {
+      throw new Error('Chef not found');
+    }
+
+    return this.prisma.order.findMany({
+      where: { chefId: chef.id },
+      include: {
+        customer: {
+          include: {
+            user: { select: { email: true } },
+          },
+        },
+        items: {
+          include: {
+            dish: { select: { name: true, photoUrl: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async updateOrderStatus(orderId: string, status: string) {
+    const validStatuses = ['NEW', 'PREPARING', 'READY', 'DELIVERING', 'COMPLETED', 'CANCELLED'];
+    
+    if (!validStatuses.includes(status)) {
+      throw new Error('Invalid status');
+    }
+
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: status as any },
+    });
+  }
 }

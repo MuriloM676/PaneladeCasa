@@ -37,6 +37,13 @@ export default function Navbar() {
                       </span>
                     )}
                   </span>
+                  {user.role === 'CHEF' && (
+                    <>
+                      <Link href="/chef/dashboard" className="text-sm text-orange-700 hover:underline">Dashboard</Link>
+                      <Link href="/chef/profile" className="text-sm text-orange-700 hover:underline">Perfil</Link>
+                      <Link href="/chef/orders" className="text-sm text-orange-700 hover:underline">Pedidos</Link>
+                    </>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="text-sm text-gray-700 hover:text-orange-600 transition"

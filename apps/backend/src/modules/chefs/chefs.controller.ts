@@ -1,5 +1,8 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Put, Body, UseGuards, Req } from '@nestjs/common';
 import { ChefsService } from './chefs.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('chefs')
 export class ChefsController {
@@ -29,5 +32,33 @@ export class ChefsController {
   @Get(':id')
   get(@Param('id') id: string) {
     return this.chefs.findById(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('CHEF')
+  @Get('profile/me')
+  getMyProfile(@Req() req: any) {
+    return this.chefs.findByUserId(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('CHEF')
+  @Put('profile')
+  updateProfile(@Req() req: any, @Body() data: any) {
+    return this.chefs.updateProfile(req.user.userId, data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('CHEF')
+  @Get('orders')
+  getChefOrders(@Req() req: any) {
+    return this.chefs.getChefOrders(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('CHEF')
+  @Put('orders/:id/status')
+  updateOrderStatus(@Param('id') orderId: string, @Body() data: { status: string }) {
+    return this.chefs.updateOrderStatus(orderId, data.status);
   }
 }

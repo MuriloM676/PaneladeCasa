@@ -2,7 +2,7 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import ImageUpload from '../../../components/ImageUpload';
+import ImageUpload from '../../../src/components/ImageUpload';
 
 interface ChefProfile {
   id: string;
