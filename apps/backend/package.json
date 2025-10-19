@@ -5,13 +5,14 @@
   "scripts": {
     "start": "node dist/src/main",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/src/main",
+    "start:prod": "prisma migrate deploy && node dist/src/main",
     "build": "nest build",
     "prebuild": "rimraf dist",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:seed:prod": "node dist/prisma/seed.js",
     "postinstall": "prisma generate"
   },
   "dependencies": {
