@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nest start",
+    "start": "node dist/main",
     "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
     "build": "nest build",
+    "prebuild": "rimraf dist",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "ts-node prisma/seed.ts",
     "postinstall": "prisma generate"
   },
@@ -39,6 +42,7 @@
     "@types/node": "^20.12.12",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.0"

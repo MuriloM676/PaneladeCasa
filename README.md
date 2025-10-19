@@ -12,6 +12,7 @@ Monorepo full-stack com backend (NestJS + PostgreSQL/Prisma + JWT) e frontend (N
 - ✅ **Paginação e Filtros** (Listagens otimizadas)
 - ✅ **Upload de Imagens** (Fotos de pratos, avatares) 📸 **NOVO!**
 - ✅ **Docker** (Ambiente completo em 1 comando)
+- ✅ **CI/CD Pipeline** (Deploy automático Vercel + Railway) 🚀 **NOVO!**
 
 ## Estrutura de Pastas
 
@@ -19,7 +20,7 @@ Monorepo full-stack com backend (NestJS + PostgreSQL/Prisma + JWT) e frontend (N
 - `apps/web`: Frontend Next.js 14 + App Router + Tailwind (porta 3000)
 - `packages/shared`: Tipos TypeScript compartilhados
 - `docs/`: ERD, API e especificações de componentes
-- `.github/workflows/`: CI básico (futuro)
+- `.github/workflows/`: Pipeline CI/CD automatizado
 
 
 ## Como Rodar com Docker
@@ -228,17 +229,48 @@ Base URL: `http://localhost:3002/api`
 ## Próximos Passos
 
 - [ ] Refresh tokens e rate limiting
-- [ ] Upload de imagens (S3/GCS)
 - [ ] PostGIS para geolocalização real
 - [ ] Integração com Stripe/PagSeguro
 - [ ] Testes automatizados (Jest backend, Playwright frontend)
-- [ ] Deploy (Vercel/Netlify frontend, Railway/Render backend)
+- [x] Deploy (Vercel/Netlify frontend, Railway/Render backend) ✅
+
+## 🚀 Deploy e CI/CD
+
+### Pipeline Automatizado
+
+O projeto está configurado com CI/CD completo:
+
+- **Frontend**: Deploy automático na Vercel
+- **Backend**: Deploy automático no Railway
+- **CI/CD**: GitHub Actions com testes e builds automatizados
+
+**📋 Pipeline:**
+1. Push para `main` → Trigger automático
+2. Executar testes e lint
+3. Build das aplicações
+4. Deploy automático em produção
+5. Notificação de status
+
+### Configuração
+
+Para configurar o deploy, consulte: **[📖 Guia Completo de CI/CD](docs/CI_CD_SETUP.md)**
+
+**Serviços:**
+- **Frontend**: [Vercel](https://vercel.com) - Zero config para Next.js
+- **Backend**: [Railway](https://railway.app) - Deploy simples com PostgreSQL integrado
+- **CI/CD**: GitHub Actions - Pipeline automatizado
+
+**Ambientes:**
+- **Produção**: Deploy automático na branch `main`
+- **Preview**: Deploy automático em Pull Requests
+- **Desenvolvimento**: `docker-compose up`
 
 ## Documentação Adicional
 
 - **ERD**: `docs/ERD.md` (diagrama Mermaid completo)
 - **API**: `docs/API.md` (detalhes dos endpoints)
 - **Frontend**: `docs/FRONTEND.md` (componentes e páginas)
+- **CI/CD**: `docs/CI_CD_SETUP.md` (configuração completa de deploy) 🚀
 
 ---
 
