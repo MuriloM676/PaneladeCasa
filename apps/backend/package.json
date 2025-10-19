@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/src/main",
     "start:dev": "nest start --watch",
-    "start:prod": "prisma migrate deploy && node dist/src/main",
+  "start:prod": "npm run prisma:migrate:deploy && node dist/src/main",
     "build": "nest build",
     "prebuild": "rimraf dist",
     "prisma:generate": "prisma generate",

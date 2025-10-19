@@ -8,9 +8,16 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
-  const corsOrigin = (process.env.CORS_ORIGIN || 'http://localhost:3000')
-    .split(',')
-    .map((s) => s.trim());
+  // Configure CORS from env (comma-separated). Defaults to localhost. Use '*' to allow all in emergencies only.
+  const corsEnv = process.env.CORS_ORIGIN?.trim();
+  let corsOrigin: any = ['http://localhost:3000'];
+  if (corsEnv) {
+    if (corsEnv === '*') {
+      corsOrigin = true; // reflect request origin (Access-Control-Allow-Origin)
+    } else {
+      corsOrigin = corsEnv.split(',').map((o) => o.trim()).filter(Boolean);
+    }
+  }
   app.enableCors({ origin: corsOrigin, credentials: true });
   
   // Servir arquivos estáticos da pasta uploads
