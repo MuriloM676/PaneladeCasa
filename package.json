@@ -11,6 +11,9 @@
     "dev:web": "npm --workspace apps/web run dev",
     "dev": "npm-run-all -p dev:backend dev:web",
     "build": "npm --workspace apps/backend run build && npm --workspace apps/web run build",
+    "build:backend": "npm --workspace apps/backend run build",
+    "start": "npm --workspace apps/backend run start:prod",
+    "start:backend": "npm --workspace apps/backend run start:prod",
     "lint": "echo 'add linters per package'",
     "postinstall": "npm --workspace apps/backend run postinstall || true"
   },

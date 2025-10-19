@@ -131,6 +131,8 @@ jobs:
         with:
           railway_token: ${{ secrets.RAILWAY_TOKEN }}
           service: 'backend'
+        env:
+          RAILWAY_STATIC_URL: 'true'
 
   # Job para deploy do frontend na Vercel (apenas na branch main)
   deploy-frontend:
