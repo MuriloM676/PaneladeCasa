@@ -8,7 +8,10 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
-  app.enableCors({ origin: ['http://localhost:3000'], credentials: true });
+  const corsOrigin = (process.env.CORS_ORIGIN || 'http://localhost:3000')
+    .split(',')
+    .map((s) => s.trim());
+  app.enableCors({ origin: corsOrigin, credentials: true });
   
   // Servir arquivos estáticos da pasta uploads
   app.useStaticAssets(join(__dirname, '..', '..', 'uploads'), {
