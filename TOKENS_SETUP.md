@@ -27,11 +27,15 @@ Os tokens fornecidos devem ser adicionados aos GitHub Secrets do repositório. *
 - **Name**: `VERCEL_PROJECT_ID`
   - **Value**: `prj_J8JCIlk8bHad7zD2F5U5RQXqbUBS`
 
-#### URL do Backend (Será obtida após deploy Railway):
+#### URL do Backend (✅ OBTIDA):
 - **Name**: `NEXT_PUBLIC_API_URL`
-  - **Value**: `https://[projeto-railway].railway.app` (será definido após deploy)
+- **Value**: `https://paneladecasa-production.up.railway.app`
 
-#### Lista Completa de Secrets:
+**🎯 AÇÃO NECESSÁRIA:**
+1. ✅ Backend está rodando em: https://paneladecasa-production.up.railway.app
+2. ✅ Testado com sucesso: /api retorna {"ok":true}
+3. 🔄 Adicione este URL como secret `NEXT_PUBLIC_API_URL` no GitHub
+4. 🚀 O frontend poderá se conectar ao backend em produção!#### Lista Completa de Secrets:
 
 1. `VERCEL_TOKEN` ✅ (fornecido)
 2. `RAILWAY_TOKEN` ✅ (fornecido)
