@@ -44,12 +44,35 @@ Configure os seguintes secrets no repositório GitHub em `Settings > Secrets and
 1. Acesse [Vercel Dashboard](https://vercel.com/dashboard)
 2. Vá em Settings > Tokens
 3. Crie um novo token com escopo apropriado
-4. Para obter ORG_ID e PROJECT_ID, use: `vercel link` no projeto
+4. Para obter ORG_ID e PROJECT_ID:
+   ```bash
+   # Instalar Vercel CLI
+   npm i -g vercel
+   
+   # Fazer login com o token
+   vercel login
+   
+   # No diretório do frontend
+   cd apps/web
+   vercel link
+   
+   # Isso mostrará:
+   # - Vercel Organization ID
+   # - Vercel Project ID
+   ```
 
 #### Railway:
 1. Acesse [Railway Dashboard](https://railway.app/dashboard)
 2. Vá em Account Settings > Tokens
 3. Crie um novo token
+
+#### Configuração Rápida:
+Se você já tem os tokens, adicione aos GitHub Secrets:
+- `VERCEL_TOKEN`: Token da Vercel
+- `RAILWAY_TOKEN`: Token do Railway
+- `VERCEL_ORG_ID`: ID da organização (via `vercel link`)
+- `VERCEL_PROJECT_ID`: ID do projeto (via `vercel link`)
+- `NEXT_PUBLIC_API_URL`: URL do backend após deploy Railway
 
 ## Variáveis de Ambiente
 
