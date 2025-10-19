@@ -94,6 +94,7 @@ model Order {
   paymentMethod  PaymentMethod @default(MOCK)
   createdAt      DateTime    @default(now())
   items          OrderItem[]
+  rating         Rating?     @relation("OrderRating")
 }
 
 model OrderItem {
@@ -113,6 +114,8 @@ model Rating {
   customerId String
   chef       Chef     @relation("ChefRatings", fields: [chefId], references: [id])
   chefId     String
+  order      Order?   @relation("OrderRating", fields: [orderId], references: [id])
+  orderId    String?  @unique
   stars      Int
   comment    String?
   createdAt  DateTime @default(now())
