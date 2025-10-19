@@ -10,8 +10,9 @@ cmds = [
 
 [phases.build]
 cmds = [
-  'cd apps/backend',
-  'npm run build'
+  'cd apps/backend && npm run build',
+  'cd apps/backend && ls -la dist',
+  'cd apps/backend && ls -la dist/src'
 ]
 
 [start]
