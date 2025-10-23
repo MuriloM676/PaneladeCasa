@@ -1,0 +1,13 @@
+# Local Terraform state
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.tfstate.lock.info
+crash.log
+
+# Sensitive local variables
+terraform.tfvars
+
+# Overrides
+override.tf
+override.tf.json

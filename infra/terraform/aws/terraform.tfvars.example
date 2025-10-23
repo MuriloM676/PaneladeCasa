@@ -1,0 +1,21 @@
+project_name = "paneladecasadev"
+aws_region   = "us-east-1"
+
+# Troque para o seu IP para segurança: ["SEU.IP.AQUI/32"]
+allowed_cidr_blocks = ["0.0.0.0/0"]
+
+postgres_username = "app_user"
+# Se vazio, o Terraform irá gerar uma senha aleatória segura
+postgres_password = ""
+postgres_db_name  = "appdb"
+
+rds_instance_class      = "db.t3.micro"
+rds_allocated_storage   = 20
+rds_publicly_accessible = true
+skip_final_snapshot     = true
+backup_retention_days   = 0
+
+deletion_protection = false
+
+# Se true, permite destruir bucket com objetos (bom para DEV)
+s3_force_destroy = true
