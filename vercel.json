@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "npm install",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://your-railway-backend-url.railway.app/api/$1"
+    }
+  ]
+}
